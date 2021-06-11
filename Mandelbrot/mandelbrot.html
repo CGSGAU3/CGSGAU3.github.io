@@ -206,7 +206,9 @@
     function update_checkers_cell_width() {
       data = document.getElementById('input_checkers_cell_width').value;
       if (data[0] < '0' || data[0] > '9')
-        document.getElementById('input_posx').classList.add("errorData");
+        document.getElementById('input_checkers_cell_width').classList.add("errorData");
+      else
+        document.getElementById('input_checkers_cell_width').classList.add("normalData");
       checkers_cell_width = parseInt(data);
       if (isNaN(checkers_cell_width))
         checkers_cell_width = 1;
@@ -217,6 +219,8 @@
       data = document.getElementById('input_size').value;
       if (data[0] < '0' || data[0] > '9')
         document.getElementById('input_size').classList.add("errorData");
+      else
+        document.getElementById('input_size').classList.add("normalData");
       size = parseInt(data);
       if (isNaN(size))
         size = 1;
@@ -227,6 +231,8 @@
       data = document.getElementById('input_posx').value;
       if (data[0] < '0' || data[0] > '9')
         document.getElementById('input_posx').classList.add("errorData");
+      else
+        document.getElementById('input_posx').classList.add("normalData");
       mposx = parseInt(data);
       if (isNaN(mposx))
         mposx = 1;
@@ -236,7 +242,9 @@
     function update_posy() {
       data = document.getElementById('input_posy').value;
       if (data[0] < '0' || data[0] > '9')
-        document.getElementById('input_posx').classList.add("errorData");
+        document.getElementById('input_posy').classList.add("errorData");
+      else
+        document.getElementById('input_posy').classList.add("normalData");
       mposy = parseInt(data);
       if (isNaN(mposy))
         mposy = 1;
