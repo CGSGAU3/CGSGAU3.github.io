@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -55,6 +56,7 @@
     var checkers_cell_width = 30;
     var mposx = 400, mposy = 400;
     var size = 100.0;
+    var errorFlag = false;
     function initGL(canvas) {
       try {
         gl = canvas.getContext("experimental-webgl");
@@ -162,6 +164,7 @@
 
 
     function drawScene() {
+      update_Errorflag();
       gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
@@ -219,11 +222,13 @@
       {
         document.getElementById('input_checkers_cell_width').classList.add("errorData");
         document.getElementById('input_checkers_cell_width').className = "errorData";
+        errorFlag = true;
       }
       else
       {
         document.getElementById('input_checkers_cell_width').classList.add("normalData");
         document.getElementById('input_checkers_cell_width').className = "normalData";
+        errorFlag = false;
       }
       checkers_cell_width = parseInt(data);
       if (isNaN(checkers_cell_width))
@@ -237,11 +242,13 @@
       {
         document.getElementById('input_size').classList.add("errorData");
         document.getElementById('input_size').className = "errorData";
+        errorFlag = true;
       }
       else
       {
         document.getElementById('input_size').classList.add("normalData");
         document.getElementById('input_size').className = "normalData";
+        errorFlag = false;
       }
       size = parseInt(data);
       if (isNaN(size))
@@ -255,11 +262,13 @@
       {
         document.getElementById('input_posx').classList.add("errorData");
         document.getElementById('input_posx').className = "errorData";
+        errorFlag = true;
       }
       else
       {
         document.getElementById('input_posx').classList.add("normalData");
         document.getElementById('input_posx').className = "normalData";
+        errorFlag = false;
       }
       mposx = parseInt(data);
       if (isNaN(mposx))
@@ -273,16 +282,31 @@
       {
         document.getElementById('input_posy').classList.add("errorData");
         document.getElementById('input_posy').className = "errorData";
+        errorFlag = true;
       }
       else
       {
         document.getElementById('input_posy').classList.add("normalData");
         document.getElementById('input_posy').className = "normalData";
+        errorFlag = false;
       }
       mposy = parseInt(data);
       if (isNaN(mposy))
         mposy = 1;
       //alert(data);
+    }
+    function update_Errorflag()
+    {
+      if (window.errorFlag)
+      {
+        document.getElementById('ERRORID').classList.add("errorDatat");
+        document.getElementById('ERRORID').className = "errorDatat"; 
+      }
+      else
+      {
+        document.getElementById('ERRORID').classList.add("normalDatat");
+        document.getElementById('ERRORID').className = "normalDatat";   
+      }
     }
   </script>
 
@@ -292,6 +316,12 @@
 
 <body onload="webGLStart();">
   <canvas id="wegl-canvas" style="border: none" width=800; height=800></canvas>
+
+  <p id="ERRORID"><b style = "position:relative;
+                              left:810px;
+                              bottom:47px;">
+    INVALID INPUT
+  </b></p>
 
   <br />
 
