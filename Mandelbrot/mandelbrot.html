@@ -3,6 +3,8 @@
 <head>
   <title>Mandelbrot</title>
 
+  <link res="stylesheet" href="./index.css">
+
   <script type="text/javascript" src="glMatrix-0.9.5.min.js"></script>
 
   <script id="shader-fs" type="x-shader/x-fragment">
@@ -203,6 +205,8 @@
 
     function update_checkers_cell_width() {
       data = document.getElementById('input_checkers_cell_width').value;
+      if (data[0] < '0' || data[0] > '9')
+        document.getElementById('input_posx').classList.add("errorData");
       checkers_cell_width = parseInt(data);
       if (isNaN(checkers_cell_width))
         checkers_cell_width = 1;
@@ -211,6 +215,8 @@
 
     function update_size() {
       data = document.getElementById('input_size').value;
+      if (data[0] < '0' || data[0] > '9')
+        document.getElementById('input_posx').classList.add("errorData");
       size = parseInt(data);
       if (isNaN(size))
         size = 1;
@@ -219,6 +225,8 @@
 
     function update_posx() {
       data = document.getElementById('input_posx').value;
+      if (data[0] < '0' || data[0] > '9')
+        document.getElementById('input_posx').classList.add("errorData");
       mposx = parseInt(data);
       if (isNaN(mposx))
         mposx = 1;
@@ -227,6 +235,8 @@
 
     function update_posy() {
       data = document.getElementById('input_posy').value;
+      if (data[0] < '0' || data[0] > '9')
+        document.getElementById('input_posx').classList.add("errorData");
       mposy = parseInt(data);
       if (isNaN(mposy))
         mposy = 1;
