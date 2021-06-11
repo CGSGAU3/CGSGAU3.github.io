@@ -1,0 +1,265 @@
+<html>
+
+<head>
+  <title>Mandelbrot</title>
+
+  <script type="text/javascript" src="glMatrix-0.9.5.min.js"></script>
+
+  <script id="shader-fs" type="x-shader/x-fragment">
+    precision mediump float;
+
+    uniform int cell_width;
+    uniform float size;
+    uniform float mpos_x;
+    uniform float mpos_y;
+
+    void main(void)
+    {
+      int n;
+      vec2 a, a1, a0;
+      
+      a0 = vec2((gl_FragCoord.x - mpos_x) / size, (gl_FragCoord.y - mpos_y) / size);
+
+      for (int i = 0; i < 2048; i++)
+      {
+        if (i > cell_width)
+          break;
+        a1.x = a.x * a.x - a.y * a.y + a0.x;
+        a1.y =  a.x * a.y * 2.0 + a0.y;
+        a = a1;
+        if (a.x * a.x + a.y * a.y < 4.0)
+          n = i;
+      }
+      float color = float(n) / 1024.0;
+      gl_FragColor = vec4(color * 100.0, color / 80.0, color * 10.0, 1.0);
+    }
+</script>
+
+  <script id="shader-vs" type="x-shader/x-vertex">
+    attribute vec3 aVertexPosition;
+
+    uniform mat4 uMVMatrix;
+    uniform mat4 uPMatrix;
+
+    void main(void)
+    {
+        gl_Position = vec4(aVertexPosition, 1.0);
+    }
+</script>
+
+
+  <script type="text/javascript">
+    var gl;
+    var checkers_cell_width = 30;
+    var mposx = 400, mposy = 400;
+    var size = 100.0;
+    function initGL(canvas) {
+      try {
+        gl = canvas.getContext("experimental-webgl");
+        gl.viewportWidth = canvas.width;
+        gl.viewportHeight = canvas.height;
+      } catch (e) {
+      }
+      if (!gl) {
+        alert("Could not initialise WebGL");
+      }
+    }
+
+
+    function getShader(gl, id) {
+      var shaderScript = document.getElementById(id);
+      if (!shaderScript) {
+        return null;
+      }
+
+      var str = "";
+      var k = shaderScript.firstChild;
+      while (k) {
+        if (k.nodeType == 3) {
+          str += k.textContent;
+        }
+        k = k.nextSibling;
+      }
+
+      var shader;
+      if (shaderScript.type == "x-shader/x-fragment") {
+        shader = gl.createShader(gl.FRAGMENT_SHADER);
+      } else if (shaderScript.type == "x-shader/x-vertex") {
+        shader = gl.createShader(gl.VERTEX_SHADER);
+      } else {
+        return null;
+      }
+
+      gl.shaderSource(shader, str);
+      gl.compileShader(shader);
+
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        alert(gl.getShaderInfoLog(shader));
+        return null;
+      }
+
+      return shader;
+    }
+
+    var shaderProgram;
+
+    function initShaders() {
+      var fragmentShader = getShader(gl, "shader-fs");
+      var vertexShader = getShader(gl, "shader-vs");
+
+      shaderProgram = gl.createProgram();
+      gl.attachShader(shaderProgram, vertexShader);
+      gl.attachShader(shaderProgram, fragmentShader);
+      gl.linkProgram(shaderProgram);
+
+      if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+        alert("Could not initialise shaders");
+      }
+
+      gl.useProgram(shaderProgram);
+
+      shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
+      gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
+
+      shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
+      shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
+      shaderProgram.cell_width_uniform = gl.getUniformLocation(shaderProgram, "cell_width");
+      shaderProgram.mpos_x_uniform = gl.getUniformLocation(shaderProgram, "mpos_x");
+      shaderProgram.mpos_y_uniform = gl.getUniformLocation(shaderProgram, "mpos_y");
+      shaderProgram.size_uniform = gl.getUniformLocation(shaderProgram, "size");
+    }
+
+
+    var mvMatrix = mat4.create();
+    var pMatrix = mat4.create();
+
+    function setMatrixUniforms() {
+      gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
+      gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
+      gl.uniform1i(shaderProgram.cell_width_uniform, checkers_cell_width);
+      gl.uniform1f(shaderProgram.size_uniform, size);
+      gl.uniform1f(shaderProgram.mpos_x_uniform, mposx);
+      gl.uniform1f(shaderProgram.mpos_y_uniform, mposy);
+    }
+
+    var squareVertexPositionBuffer;
+
+    function initBuffers() {
+      squareVertexPositionBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
+      vertices = [
+        1.0, 1.0, 0.0,
+        -1.0, 1.0, 0.0,
+        1.0, -1.0, 0.0,
+        -1.0, -1.0, 0.0
+      ];
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+      squareVertexPositionBuffer.itemSize = 3;
+      squareVertexPositionBuffer.numItems = 4;
+    }
+
+
+    function drawScene() {
+      gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+      mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
+
+      mat4.identity(mvMatrix);
+
+      mat4.translate(mvMatrix, [0, 0.0, -7]);
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
+      gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, squareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+      setMatrixUniforms();
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, squareVertexPositionBuffer.numItems);
+    }
+
+    function tick() {
+      window.requestAnimationFrame(tick);
+      drawScene();
+    }
+
+
+    function webGLStart() {
+      var xmlhttp = new XMLHttpRequest();
+      xmlhttp.open('GET', '/0/data.txt', false);
+      xmlhttp.send(null);
+      if (xmlhttp.status == 200) {
+        alert(xmlhttp.responseText);
+      }
+
+      var canvas = document.getElementById("wegl-canvas");
+      initGL(canvas);
+      initShaders();
+      initBuffers();
+
+      gl.clearColor(0.0, 0.0, 0.0, 1.0);
+      gl.enable(gl.DEPTH_TEST);
+
+      drawScene();
+      tick();
+    }
+
+    function update_checkers_cell_width() {
+      data = document.getElementById('input_checkers_cell_width').value;
+      checkers_cell_width = parseInt(data);
+      if (isNaN(checkers_cell_width))
+        checkers_cell_width = 1;
+      //alert(data);
+    }
+
+    function update_size() {
+      data = document.getElementById('input_size').value;
+      size = parseInt(data);
+      if (isNaN(size))
+        size = 1;
+      //alert(data);
+    }
+
+    function update_posx() {
+      data = document.getElementById('input_posx').value;
+      mposx = parseInt(data);
+      if (isNaN(mposx))
+        mposx = 1;
+      //alert(data);
+    }
+
+    function update_posy() {
+      data = document.getElementById('input_posy').value;
+      mposy = parseInt(data);
+      if (isNaN(mposy))
+        mposy = 1;
+      //alert(data);
+    }
+  </script>
+
+
+</head>
+
+
+<body onload="webGLStart();">
+  <canvas id="wegl-canvas" style="border: none" width=800; height=800></canvas>
+
+  <br />
+
+  <label for="input_size">Search iterations:</label> <input type="text" id="input_checkers_cell_width"
+    onkeyup="update_checkers_cell_width()"><br>
+
+  <br />
+
+   <label for="input_checkers_cell_width">Zoom:</label> <input type="text" id="input_size"
+    onkeyup="update_size()"><br>
+
+  <br />
+
+   <label for="input_posx">PosX:</label> <input type="text" id="input_posx"
+    onkeyup="update_posx()"><br>
+
+  <br />
+
+    <label for="input_posy">PosY:</label> <input type="text" id="input_posy"
+    onkeyup="update_posy()"><br>
+</body>
+
+</html>
