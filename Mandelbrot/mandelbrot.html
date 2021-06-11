@@ -203,9 +203,19 @@
       tick();
     }
 
+    function isString (a)
+    {
+        if (typeof a !== "string")
+          return true;
+        for (let i = 0; i < a.length; i++)
+          if (a[i] < '0' || a[i] > '9')
+            return true;
+        return false;
+    }
+
     function update_checkers_cell_width() {
       data = document.getElementById('input_checkers_cell_width').value;
-      if (data[0] < '0' || data[0] > '9')
+      if (isString(data))
       {
         document.getElementById('input_checkers_cell_width').classList.add("errorData");
         document.getElementById('input_checkers_cell_width').className = "errorData";
@@ -223,7 +233,7 @@
 
     function update_size() {
       data = document.getElementById('input_size').value;
-      if (data[0] < '0' || data[0] > '9')
+      if (isString(data))
       {
         document.getElementById('input_size').classList.add("errorData");
         document.getElementById('input_size').className = "errorData";
@@ -241,7 +251,7 @@
 
     function update_posx() {
       data = document.getElementById('input_posx').value;
-      if (data[0] < '0' || data[0] > '9')
+      if (isString(data))
       {
         document.getElementById('input_posx').classList.add("errorData");
         document.getElementById('input_posx').className = "errorData";
@@ -259,7 +269,7 @@
 
     function update_posy() {
       data = document.getElementById('input_posy').value;
-      if (data[0] < '0' || data[0] > '9')
+      if (isString(data))
       {
         document.getElementById('input_posy').classList.add("errorData");
         document.getElementById('input_posy').className = "errorData";
