@@ -56,7 +56,7 @@
     var checkers_cell_width = 30;
     var mposx = 400, mposy = 400;
     var size = 100.0;
-    var errorFlag = false;
+    var errorFlag = [false, false, false, false];
     function initGL(canvas) {
       try {
         gl = canvas.getContext("experimental-webgl");
@@ -188,10 +188,10 @@
 
     function webGLStart() {
       var xmlhttp = new XMLHttpRequest();
-      xmlhttp.open('GET', '/0/data.txt', false);
+      xmlhttp.open('GET', 'data.txt', false);
       xmlhttp.send(null);
       if (xmlhttp.status == 200) {
-        alert(xmlhttp.responseText);
+        console.log(xmlhttp.responseText);
       }
 
       var canvas = document.getElementById("wegl-canvas");
@@ -206,29 +206,26 @@
       tick();
     }
 
-    function isString (a)
-    {
-        if (typeof a !== "string")
+    function isString(a) {
+      if (typeof a !== "string")
+        return true;
+      for (let i = 0; i < a.length; i++)
+        if (a[i] < '0' || a[i] > '9')
           return true;
-        for (let i = 0; i < a.length; i++)
-          if (a[i] < '0' || a[i] > '9')
-            return true;
-        return false;
+      return false;
     }
 
     function update_checkers_cell_width() {
       data = document.getElementById('input_checkers_cell_width').value;
-      if (isString(data))
-      {
+      if (isString(data)) {
         document.getElementById('input_checkers_cell_width').classList.add("errorData");
         document.getElementById('input_checkers_cell_width').className = "errorData";
-        errorFlag = true;
+        errorFlag[0] = true;
       }
-      else
-      {
+      else {
         document.getElementById('input_checkers_cell_width').classList.add("normalData");
         document.getElementById('input_checkers_cell_width').className = "normalData";
-        errorFlag = false;
+        errorFlag[0] = false;
       }
       checkers_cell_width = parseInt(data);
       if (isNaN(checkers_cell_width))
@@ -238,17 +235,15 @@
 
     function update_size() {
       data = document.getElementById('input_size').value;
-      if (isString(data))
-      {
+      if (isString(data)) {
         document.getElementById('input_size').classList.add("errorData");
         document.getElementById('input_size').className = "errorData";
-        errorFlag = true;
+        errorFlag[1] = true;
       }
-      else
-      {
+      else {
         document.getElementById('input_size').classList.add("normalData");
         document.getElementById('input_size').className = "normalData";
-        errorFlag = false;
+        errorFlag[1] = false;
       }
       size = parseInt(data);
       if (isNaN(size))
@@ -258,17 +253,15 @@
 
     function update_posx() {
       data = document.getElementById('input_posx').value;
-      if (isString(data))
-      {
+      if (isString(data)) {
         document.getElementById('input_posx').classList.add("errorData");
         document.getElementById('input_posx').className = "errorData";
-        errorFlag = true;
+        errorFlag[2] = true;
       }
-      else
-      {
+      else {
         document.getElementById('input_posx').classList.add("normalData");
         document.getElementById('input_posx').className = "normalData";
-        errorFlag = false;
+        errorFlag[2] = false;
       }
       mposx = parseInt(data);
       if (isNaN(mposx))
@@ -278,34 +271,29 @@
 
     function update_posy() {
       data = document.getElementById('input_posy').value;
-      if (isString(data))
-      {
+      if (isString(data)) {
         document.getElementById('input_posy').classList.add("errorData");
         document.getElementById('input_posy').className = "errorData";
-        errorFlag = true;
+        errorFlag[3] = true;
       }
-      else
-      {
+      else {
         document.getElementById('input_posy').classList.add("normalData");
         document.getElementById('input_posy').className = "normalData";
-        errorFlag = false;
+        errorFlag[3] = false;
       }
       mposy = parseInt(data);
       if (isNaN(mposy))
         mposy = 1;
       //alert(data);
     }
-    function update_Errorflag()
-    {
-      if (window.errorFlag)
-      {
+    function update_Errorflag() {
+      if (window.errorFlag[0] || window.errorFlag[1] || window.errorFlag[2] || window.errorFlag[3]) {
         document.getElementById('ERRORID').classList.add("errorDatat");
-        document.getElementById('ERRORID').className = "errorDatat"; 
+        document.getElementById('ERRORID').className = "errorDatat";
       }
-      else
-      {
+      else {
         document.getElementById('ERRORID').classList.add("normalDatat");
-        document.getElementById('ERRORID').className = "normalDatat";   
+        document.getElementById('ERRORID').className = "normalDatat";
       }
     }
   </script>
@@ -317,12 +305,6 @@
 <body onload="webGLStart();">
   <canvas id="wegl-canvas" style="border: none" width=800; height=800></canvas>
 
-  <p id="ERRORID"><b style = "position:relative;
-                              left:810px;
-                              bottom:47px;">
-    INVALID INPUT
-  </b></p>
-
   <br />
 
   <label for="input_size">Search iterations:</label> <input type="text" id="input_checkers_cell_width"
@@ -330,18 +312,19 @@
 
   <br />
 
-   <label for="input_checkers_cell_width">Zoom:</label> <input type="text" id="input_size"
-    onkeyup="update_size()"><br>
+  <label for="input_checkers_cell_width">Zoom:</label> <input type="text" id="input_size" onkeyup="update_size()"><br>
 
   <br />
 
-   <label for="input_posx">PosX:</label> <input type="text" id="input_posx"
-    onkeyup="update_posx()"><br>
+  <label for="input_posx">PosX:</label> <input type="text" id="input_posx" onkeyup="update_posx()"><br>
 
   <br />
 
-    <label for="input_posy">PosY:</label> <input type="text" id="input_posy"
-    onkeyup="update_posy()"><br>
+  <label for="input_posy">PosY:</label> <input type="text" id="input_posy" onkeyup="update_posy()"><br>
+
+  <p id="ERRORID"><b>
+      INVALID INPUT
+    </b></p>
 </body>
 
 </html>
