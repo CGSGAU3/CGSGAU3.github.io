@@ -216,7 +216,7 @@
     function update_size() {
       data = document.getElementById('input_size').value;
       if (data[0] < '0' || data[0] > '9')
-        document.getElementById('input_posx').classList.add("errorData");
+        document.getElementById('input_size').classList.add("errorData");
       size = parseInt(data);
       if (isNaN(size))
         size = 1;
