@@ -1,6 +1,7 @@
-.button
+#kn
 {
     height: 30px;
-    width: 102px;
+    width: 200px;
     background-color: #4c77cc;
+    border-radius: 15px;
 }
