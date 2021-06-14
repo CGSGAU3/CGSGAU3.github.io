@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF_8" />
+    <title>Sample hosted HTML</title>
+    <link rel="stylesheet" href="./styles.css">
+    <td class="a">Input message <input id="msg" size="5" onkeyup="changeMessage()"></td>
+    <button onmousedown="sendMessage()">Send Message</button>
+    <script type="text/javascript">
+        var usn = prompt("Input your name: ");
+        var msg;
+        var Messages = [];
+        var NumOfMessages = 0;
+
+        function changeMessage() {
+            msg = document.getElementById("msg").value;
+        }
+
+        function sendMessage() {
+            if (msg[0] !== 0 && msg[0] !== ' ') {
+                fetch("http://localhost:8080/send", { method: 'POST', body: usn + ": " + msg });
+            }
+        }
+
+        async function getMessage() {
+            try {
+                const responce = await window.fetch("http://localhost:8080/send");
+                if (!responce.ok)
+                    throw new Error(`Response status is: ${response.status}`);
+                const cmsg = responce.text;
+                Messages[NumOfMessages++] = cmsg;
+            } catch (err) {
+                Messages[NumOfMessages++] = err.message;
+            }
+        }
+
+        function initChat() {
+            setTimeout(getMessage, 0.5);
+        }
+    </script>
+</head>
+
+<body onload="initChat()">
+    <div id="chat">
+
+        <script type="text/javascript">
+            for (let i = 0; i < NumOfMessages; i++) {
+                var tag = document.createElement("p");
+                var text = document.createTextNode(Messages[i]);
+                tag.appendChild(text);
+                var element = document.getElementById("chat");
+                element.appendChild(tag);
+            }
+        </script>
+</body>
+
+</html>
