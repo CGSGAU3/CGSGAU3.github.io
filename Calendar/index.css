@@ -1,0 +1,26 @@
+.table
+{
+    border-collapse: collapse;
+}
+
+td,
+th {
+    border: blue;
+    padding: 3px;
+    text-align: center;
+    background-color: palegreen;
+}
+
+th {
+    font-weight: bold;
+    background-color: orange;
+}
+
+.WDay
+{
+    width: fit-content;
+    height: fit-content;
+    background-color: #4c77cc;
+    border-radius: 47px;
+    padding: 30px;
+}

@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html>
+<div class="WDay">
+
+    <head>
+        <meta charset="utf-8">
+        <title>Calendar</title>
+        <link rel="stylesheet" href="./index.css">
+        <h1>Calendar (AU3)</h1>
+        <h4>Input month & day:</h4>
+    </head>
+
+    <body>
+        <td class="a">Year <input id="year" size="5" onkeyup="change_month()"></td>
+        <select id="month" onchange="change_month()">
+            <option value=1>January</option>
+            <option value=2>February</option>
+            <option value=3>March</option>
+            <option value=4>April</option>
+            <option value=5>May</option>
+            <option value=6>June</option>
+            <option value=7>July</option>
+            <option value=8>August</option>
+            <option value=9>September</option>
+            <option value=10>October</option>
+            <option value=11>November</option>
+            <option value=12>December</option>
+        </select>
+        <div id="calendar"></div>
+
+        <script>
+            var Year = 2021, Month = 6;
+
+            function change_month() {
+                Month = document.getElementById("month").value;
+                Year = document.getElementById("year").value;
+                ShowCalendar(calendar, Year, Month);
+            }
+
+            function ShowCalendar(elem, year, month) {
+
+                let mon = month - 1;
+                let d = new Date(year, mon);
+
+                let table = '<table><tr><th>Пн</th><th>Вт</th><th>Ср</th><th>Чт</th><th>Пт</th><th>Сб</th><th>Вс</th></tr><tr>';
+
+                for (let i = 0; i < getDay(d); i++) {
+                    table += '<td></td>';
+                }
+
+                while (d.getMonth() == mon) {
+                    table += '<td>' + d.getDate() + '</td>';
+
+                    if (getDay(d) % 7 == 6) {
+                        table += '</tr><tr>';
+                    }
+
+                    d.setDate(d.getDate() + 1);
+                }
+
+                if (getDay(d) != 0) {
+                    for (let i = getDay(d); i < 7; i++) {
+                        table += '<td></td>';
+                    }
+                }
+
+                table += '</tr></table>';
+
+                elem.innerHTML = table;
+            }
+
+            function getDay(date) {
+                let day = date.getDay();
+                if (day == 0) day = 7;
+                return day - 1;
+            }
+
+            ShowCalendar(calendar, Year, Month);
+        </script>
+    </body>
+</div>
+
+</html>
