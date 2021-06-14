@@ -28,9 +28,11 @@
                 if (!responce.ok)
                     throw new Error(`Response status is: ${response.status}`);
                 const cmsg = await responce.text();
+                if (cmsg[0] > 32)
+                    alert(cmsg);
                 Messages[NumOfMessages++] = cmsg;
             } catch (err) {
-                Messages[NumOfMessages++] = err.message;
+                Messages[NumOfMessages++] = err.message, NumOfMessages++;
             }
             for (let i = 0; i < NumOfMessages; i++) {
                 var tag = document.createElement("p");

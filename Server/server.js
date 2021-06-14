@@ -13,6 +13,7 @@ const requestListener = function (req, res) {
     );
     let fileName;
     let contentType;
+    let IsMsg = false;
 
 
     if (req.url === "/") {
@@ -20,6 +21,7 @@ const requestListener = function (req, res) {
         contentType = "text/html";
     }
     else if (req.url === "/newMessage") {
+        IsMsg = true;
         res.writeHead(200);
         let body = "";
         req.on('data', chunk => {
@@ -43,17 +45,19 @@ const requestListener = function (req, res) {
         return;
     }
 
-    fs.readFile(`${__dirname}/${fileName}`)
-        .then(contents => {
-            res.setHeader("Content-Type", contentType);
-            res.writeHead(200);
-            res.end(contents.toString());
-        })
-        .catch(err => {
-            res.writeHead(500);
-            res.end(err.message);
-            return;
-        });
+    if (!IsMsg) {
+        fs.readFile(`${__dirname}/${fileName}`)
+            .then(contents => {
+                res.setHeader("Content-Type", contentType);
+                res.writeHead(200);
+                res.end(contents.toString());
+            })
+            .catch(err => {
+                res.writeHead(500);
+                res.end(err.message);
+                return;
+            });
+    }
 };
 
 const server = http.createServer(requestListener);
