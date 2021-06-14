@@ -18,32 +18,20 @@
 
         function sendMessage() {
             if (msg[0] !== 0 && msg[0] !== ' ') {
-                fetch("http://localhost:8080/send", { method: 'POST', body: usn + ": " + msg });
+                fetch("/newMessage", { method: 'POST', body: usn + ": " + msg });
             }
         }
 
         async function getMessage() {
             try {
-                const responce = await window.fetch("http://localhost:8080/send");
+                const responce = await window.fetch("/newMessage");
                 if (!responce.ok)
                     throw new Error(`Response status is: ${response.status}`);
-                const cmsg = responce.text;
+                const cmsg = await responce.text();
                 Messages[NumOfMessages++] = cmsg;
             } catch (err) {
                 Messages[NumOfMessages++] = err.message;
             }
-        }
-
-        function initChat() {
-            setTimeout(getMessage, 0.5);
-        }
-    </script>
-</head>
-
-<body onload="initChat()">
-    <div id="chat">
-
-        <script type="text/javascript">
             for (let i = 0; i < NumOfMessages; i++) {
                 var tag = document.createElement("p");
                 var text = document.createTextNode(Messages[i]);
@@ -51,7 +39,17 @@
                 var element = document.getElementById("chat");
                 element.appendChild(tag);
             }
-        </script>
+        }
+
+        function initChat() {
+            setTimeout(getMessage, 500);
+        }
+    </script>
+</head>
+
+<body onload="initChat()">
+    <div id="chat">
+    </div>
 </body>
 
 </html>

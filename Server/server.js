@@ -14,21 +14,21 @@ const requestListener = function (req, res) {
     let fileName;
     let contentType;
 
+
     if (req.url === "/") {
         fileName = "chat.html";
         contentType = "text/html";
     }
-    else if (req.url === "http://localhost:8080/send") {
+    else if (req.url === "/newMessage") {
         res.writeHead(200);
-        let data = "";
+        let body = "";
         req.on('data', chunk => {
-            data += chunk;
+            body += chunk.toString();
         })
         req.on('end', () => {
-            console.log(JSON.parse(data).todo);
-            Messages[NumOfMessages++] = data;
-            console.log(data);
-            res.end();
+            console.log(body);
+            Messages[NumOfMessages++] = body;
+            res.end(body);
         })
         console.log(
             `Request headers: ${JSON.stringify(req.headers)}`
@@ -47,11 +47,11 @@ const requestListener = function (req, res) {
         .then(contents => {
             res.setHeader("Content-Type", contentType);
             res.writeHead(200);
-            res.end(contents);
+            res.end(contents.toString());
         })
         .catch(err => {
             res.writeHead(500);
-            res.end(err);
+            res.end(err.message);
             return;
         });
 };
