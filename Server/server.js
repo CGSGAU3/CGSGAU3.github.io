@@ -36,6 +36,12 @@ const requestListener = function (req, res) {
             `Request headers: ${JSON.stringify(req.headers)}`
         );
     }
+    else if (req.url === "/getMessage") {
+        IsMsg = true;
+        res.writeHead(200);
+        res.end(JSON.stringify(Messages));
+        console.log("Getting messages from user...");
+    }
     else if (req.url.endsWith(".css")) {
         fileName = req.url.substr(1);
         contentType = "text/css";
