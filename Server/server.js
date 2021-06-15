@@ -1,11 +1,11 @@
 const http = require("http");
 const fs = require('fs').promises;
 
-const host = 'localhost';
 const port = '8080';
 
-var Messages = [];
-var NumOfMessages = 0;
+var Message = "";
+var allMessages = [];
+var Num = 0;
 
 const requestListener = function (req, res) {
     console.log(
@@ -23,18 +23,28 @@ const requestListener = function (req, res) {
     else if (req.url === "/newMessage") {
         IsMsg = true;
         res.writeHead(200);
-        let body = "";
-        req.on('data', chunk => {
-            body += chunk.toString();
+        let data = "";
+        req.on('data', (chunk) => {
+            data += chunk.toString();
         })
         req.on('end', () => {
-            console.log(body);
-            Messages[NumOfMessages++] = body;
-            res.end(body);
+            console.log(`Reseived message: ${data}`);
+            if (data !== "") {
+                Message = data;
+                allMessages[Num++] = data;
+            }
+            res.end();
         })
         console.log(
             `Request headers: ${JSON.stringify(req.headers)}`
         );
+        return;
+    }
+    else if (req.url === "/getMessage") {
+        IsMsg = true;
+        res.writeHead(200);
+        res.end(JSON.stringify(allMessages));
+        console.log("Getting messages from user...");
     }
     else if (req.url === "/getMessage") {
         IsMsg = true;
@@ -67,6 +77,4 @@ const requestListener = function (req, res) {
 };
 
 const server = http.createServer(requestListener);
-server.listen(port, host, () => {
-    console.log(`Server is running on http://${host}:${port}`);
-});
+server.listen(port);

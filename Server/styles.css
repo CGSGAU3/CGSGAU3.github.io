@@ -14,20 +14,7 @@ body {
     width: 100%;
     height: 100%;
     position: relative;
-    background-color: rgb(236, 152, 42);
-}
-
-.center {
-    width: 100%;
-    height: 50%;
-    margin: 0;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-family: "Trebuchet MS", Helvetica, sans-serif;
-    text-align: center;
+    background-color: #4c77cc;
 }
 
 h1 {
@@ -36,4 +23,26 @@ h1 {
 
 p {
     font-size: 30px;
+}
+
+input {
+    width: 300px;
+    height: 102px;
+    border-radius: 3px;
+    font-size: 20px;
+}
+
+#send {
+    border-radius: 30px;
+    width: 102px;
+    height: 47px;
+    background-color: chocolate;
+    font-size: 47;
+    font-family: 'Times New Roman', Times, serif;
+    color: darkblue;
+}
+
+#chat {
+    background-color: gold;
+    color: blue;
 }

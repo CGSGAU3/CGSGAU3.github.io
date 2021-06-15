@@ -2,56 +2,61 @@
 
 <head>
     <meta charset="UTF_8" />
-    <title>Sample hosted HTML</title>
+    <title>Chat (AU3)</title>
     <link rel="stylesheet" href="./styles.css">
-    <td class="a">Input message <input id="msg" size="5" onkeyup="changeMessage()"></td>
-    <button onmousedown="sendMessage()">Send Message</button>
-    <button onmousedown="getMessages()">Get Messages</button>
+    Type Message:
+    <input id="msg" onkeydown="changeMessage(event)">
+    <button id="send" onmousedown="sendMessage()">Send Message</button>
+    <br><br><br>
     <script type="text/javascript">
         var usn = prompt("Input your name: ");
         var msg;
         var Messages = [];
         var NumOfMessages = 0;
 
-        function changeMessage() {
+        function changeMessage(e) {
             msg = document.getElementById("msg").value;
+            if (e.code == 'Enter')
+                sendMessage();
         }
 
         function sendMessage() {
-            if (msg[0] !== 0 && msg[0] !== ' ') {
+            if (msg != "") {
                 fetch("/newMessage", { method: 'POST', body: usn + ": " + msg });
+                document.getElementById("msg").value = "";
             }
         }
 
-        function getMessages() {
+        function getAllMessages() {
             fetch("/getMessage", { method: 'GET' });
         }
 
-        async function getMessage() {
-            try {
-                const responce = await window.fetch("/getMessage");
-                if (!responce.ok)
-                    throw new Error(`Response status is: ${response.status}`);
-                const cmsg = await responce.text();
-                if (cmsg[0] > 32)
-                    Messages[NumOfMessages++] = cmsg;
-            } catch (err) {
-                Messages[NumOfMessages++] = err.message, NumOfMessages++;
-            }
-            for (let i = 0; i < NumOfMessages; i++) {
+        function generateChat() {
+            document.getElementById("chat").innerHTML = "";
+            for (let i = 0; i < Messages.length; i++) {
                 var tag = document.createElement("p");
                 var text = document.createTextNode(Messages[i]);
                 tag.appendChild(text);
                 var element = document.getElementById("chat");
                 element.appendChild(tag);
             }
+        }
+
+        async function getMessage() {
+            try {
+                const responce = await window.fetch("/getMessage", { method: 'GET' });
+                if (!responce.ok)
+                    throw new Error(`Response status is: ${response.status}`);
+                Messages = JSON.parse(await responce.text());
+                generateChat();
+            } catch (err) {
+                console.log(err.message);
+            }
             setTimeout(getMessage, 500);
         }
 
         function initChat() {
-            setTimeout(getMessage, 500);
-            msg = "Hello World";
-            sendMessage();
+            setTimeout(getMessage, 5000);
         }
     </script>
 </head>
