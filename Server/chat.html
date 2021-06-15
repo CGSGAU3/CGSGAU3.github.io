@@ -4,20 +4,38 @@
     <meta charset="UTF_8" />
     <title>Chat (AU3)</title>
     <link rel="stylesheet" href="./styles.css">
-    Type Message:
-    <input id="msg" onkeydown="changeMessage(event)">
-    <button id="send" onmousedown="sendMessage()">Send Message</button>
+    <div class="inputmsg">
+        Type Message:
+        <input id="msg" onkeydown="changeMessage(event)">
+        <button id="send" onmousedown="sendMessage()">Send Message</button>
+        <button id="scroll" onmousedown="setScroll()">Disable Scroll</button>
+    </div>
     <br><br><br>
     <script type="text/javascript">
         var usn = prompt("Input your name: ");
         var msg;
         var Messages = [];
         var NumOfMessages = 0;
+        var isScroll = true;
 
         function changeMessage(e) {
             msg = document.getElementById("msg").value;
             if (e.code == 'Enter')
                 sendMessage();
+        }
+
+        function setScroll() {
+            if (isScroll) {
+                isScroll = false;
+                document.getElementById("scroll").innerHTML = "Enable Scroll";
+                return;
+            }
+            else {
+                isScroll = true;
+                document.getElementById("scroll").innerHTML = "Disable Scroll";
+                setTimeout(scrollPage, 10);
+                return;
+            }
         }
 
         function sendMessage() {
@@ -55,8 +73,15 @@
             setTimeout(getMessage, 500);
         }
 
+        function scrollPage() {
+            window.scrollBy(0, 1000);
+            if (isScroll)
+                setTimeout(scrollPage, 10);
+        }
+
         function initChat() {
-            setTimeout(getMessage, 5000);
+            setTimeout(getMessage, 500);
+            setTimeout(scrollPage, 10);
         }
     </script>
 </head>

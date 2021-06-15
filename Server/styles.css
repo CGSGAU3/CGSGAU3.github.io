@@ -14,7 +14,8 @@ body {
     width: 100%;
     height: 100%;
     position: relative;
-    background-color: #4c77cc;
+    background-image: url('https://m.seonews.ru/upload/medialibrary/807/80733879ff970a83ad812743317c0d95.gif');
+    background-size: 100%;
 }
 
 h1 {
@@ -43,6 +44,32 @@ input {
 }
 
 #chat {
-    background-color: gold;
-    color: blue;
+    color: yellow;
+    width: 33%;
+    position: absolute;
+    left: 33%;
+}
+
+.inputmsg {
+    position: fixed;
+    bottom: 0%;
+    left: 50%;
+}
+
+#scroll {
+    position: fixed;
+    top: 0%;
+    right: 0%;
+    width: 102px;
+    height: 47px;
+    border-radius: 30px;
+    background-color: chocolate;
+    font-size: 47;
+    font-family: 'Times New Roman', Times, serif;
+    color: darkblue;
+}
+
+title {
+    background-image: url('https://m.seonews.ru/upload/medialibrary/807/80733879ff970a83ad812743317c0d95.gif');
+    background-size: 100%;
 }

@@ -46,11 +46,9 @@ const requestListener = function (req, res) {
         res.end(JSON.stringify(allMessages));
         console.log("Getting messages from user...");
     }
-    else if (req.url === "/getMessage") {
-        IsMsg = true;
-        res.writeHead(200);
-        res.end(JSON.stringify(Messages));
-        console.log("Getting messages from user...");
+    else if (req.url === "/favicon.ico") {
+        fileName = "favicon.ico";
+        contentType = "image/x-icon";
     }
     else if (req.url.endsWith(".css")) {
         fileName = req.url.substr(1);
