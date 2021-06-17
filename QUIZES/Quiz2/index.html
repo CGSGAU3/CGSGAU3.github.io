@@ -12,8 +12,6 @@
 
         function flipStr(startNum) {
             for (let i = 0; i < maxFlip; i++) {
-                if (startNum + i >= Str.length)
-                    return;
                 if (Str[startNum + i] === '-')
                     Str[startNum + i] = '+';
                 else
@@ -29,23 +27,6 @@
             return true;
         }
 
-        function posFirstMinus() {
-            for (let i = 0; i < Str.length; i++) {
-                if (Str[i] == '-')
-                    return i;
-            }
-        }
-
-        function amountMinuses() {
-            let num = 0;
-            for (let i = 0; i < Str.length; i++) {
-                if (Str[i] == '-') {
-                    num++;
-                }
-            }
-            return num;
-        }
-
         function makeArray(SStr) {
             let i = 0;
 
@@ -55,17 +36,16 @@
             }
         }
 
-        function searchFlips(SStr) {
+        function searchAdv(SStr) {
             makeArray(SStr);
-            while (!isStrCorrect()) {
-                if (amountMinuses() < maxFlip) {
-                    numIter = 0;
-                    console.log("Impossible");
-                    return;
-                }
-                flipStr(posFirstMinus());
-                numIter++;
+            for (let i = 0; i < Str.length - maxFlip + 1; i++) {
+                if (Str[i] === '-')
+                    flipStr(i), numIter++;
             }
+            if (isStrCorrect())
+                console.log("Num of iterations: " + numIter);
+            else
+                console.log("Impossible");
         }
 
         function readFiles(e) {
@@ -84,10 +64,9 @@
                     let rows = content.split('\n');
                     maxFlip = parseInt(rows[0]);
                     if (maxFlip >= rows[1].length)
-                        console.log("Zero")
+                        console.log("There is no reason to solve")
                     else {
-                        searchFlips(rows[1]);
-                        console.log("Num of iterations: " + numIter);
+                        searchAdv(rows[1]);
                     }
                 });
 
