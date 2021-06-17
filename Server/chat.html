@@ -17,6 +17,8 @@
     <script>
         var usn = prompt("Input your username: ");
         var socket = io();
+        var isCheck = false;
+        socket.emit('username', usn);
 
         var messages = document.getElementById('messages');
         var form = document.getElementById('form');
@@ -34,7 +36,12 @@
             var item = document.createElement('li');
             item.textContent = msg;
             messages.appendChild(item);
-            window.scrollTo(0, document.body.scrollHeight);
+            messages.scrollBy(0, 10000000);
+        });
+
+        socket.on('username', function (usname) {
+            if (!isCheck)
+                usn = usname, isCheck = true;
         });
     </script>
 </body>

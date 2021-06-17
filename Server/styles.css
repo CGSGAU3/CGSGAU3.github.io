@@ -1,17 +1,17 @@
 body {
-    margin: 0;
     padding-bottom: 3rem;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background-image: url('https://m.seonews.ru/upload/medialibrary/807/80733879ff970a83ad812743317c0d95.gif');
-    background-size: 100%;
+    font-family: 'Times New Roman', Times, serif;
+    background-image: url('https://www.mendozapost.com/files/image/43/43862/55f7f1230282d_1420_!.gif?s=639ab15de7a89e56d1745978d58648c0&d=1567225709');
+    background-size: cover;
     font-size: 30px;
+    background-attachment: fixed;
 }
 
 #form {
     background: rgba(0, 0, 0, 0.15);
-    padding: 0.25rem;
+    padding: 5px;
     position: fixed;
-    bottom: 0;
+    bottom: 1%;
     left: 0;
     right: 0;
     display: flex;
@@ -21,11 +21,13 @@ body {
 }
 
 #input {
+    background-color: indigo;
     border: none;
     padding: 0 1rem;
     flex-grow: 1;
     border-radius: 2rem;
     margin: 0.25rem;
+    color: lime;
 }
 
 #input:focus {
@@ -33,21 +35,31 @@ body {
 }
 
 #form>button {
-    background: #333;
+    background: rgb(0, 0, 255);
     border: none;
     padding: 0 1rem;
     margin: 0.25rem;
-    border-radius: 3px;
+    border-radius: 10px;
     outline: none;
-    color: #fff;
+    color: gold;
+    cursor: cell;
 }
 
 #messages {
+    background-color: rgba(78, 0, 0, 0.5);
     list-style-type: none;
-    margin: 0;
-    padding: 0;
+    position: fixed;
+    left: 5%;
+    right: 5%;
+    top: 1%;
+    bottom: 3.5%;
+    padding: 0.25rem;
+    color: rgb(255, 255, 255);
+    overflow-wrap: break-word;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 
 #messages>li {
-    padding: 0.5rem 1rem;
+    padding: 1px;
 }
