@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Quiz2</title>
+    <input type="file" onChange="readFiles(this)" />
+    <script type="text/javascript">
+        let maxFlip;
+        let numIter = 0;
+        let Str = [];
+
+        function flipStr(startNum) {
+            for (let i = 0; i < maxFlip; i++) {
+                if (startNum + i >= Str.length)
+                    return;
+                if (Str[startNum + i] === '-')
+                    Str[startNum + i] = '+';
+                else
+                    Str[startNum + i] = '-';
+            }
+        }
+
+        function isStrCorrect() {
+            for (let i = 0; i < Str.length; i++) {
+                if (Str[i] === '-')
+                    return false;
+            }
+            return true;
+        }
+
+        function posFirstMinus() {
+            for (let i = 0; i < Str.length; i++) {
+                if (Str[i] == '-')
+                    return i;
+            }
+        }
+
+        function amountMinuses() {
+            let num = 0;
+            for (let i = 0; i < Str.length; i++) {
+                if (Str[i] == '-') {
+                    num++;
+                }
+            }
+            return num;
+        }
+
+        function makeArray(SStr) {
+            let i = 0;
+
+            while (i < SStr.length) {
+                Str.push(SStr[i]);
+                i++;
+            }
+        }
+
+        function searchFlips(SStr) {
+            makeArray(SStr);
+            while (!isStrCorrect()) {
+                if (amountMinuses() < maxFlip) {
+                    numIter = 0;
+                    console.log("Impossible");
+                    return;
+                }
+                flipStr(posFirstMinus());
+                numIter++;
+            }
+        }
+
+        function readFiles(e) {
+            if (window.FileList && window.File) {
+
+                const file = e.files[0];
+
+                const name = file.name ? file.name : 'NOT SUPPORTED';
+                const type = file.type ? file.type : 'NOT SUPPORTED';
+                const size = file.size ? file.size : 'NOT SUPPORTED';
+                const reader = new FileReader();
+
+                reader.addEventListener('load', event => {
+                    let content = event.target.result;
+
+                    let rows = content.split('\n');
+                    maxFlip = parseInt(rows[0]);
+                    if (maxFlip >= rows[1].length)
+                        console.log("Zero")
+                    else {
+                        searchFlips(rows[1]);
+                        console.log("Num of iterations: " + numIter);
+                    }
+                });
+
+                reader.readAsText(file);
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <script>
+    </script>
+</body>
+
+</html>
