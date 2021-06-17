@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Quiz1</title>
+    <input type="file" onChange="readFiles(this)" />
+    <script type="text/javascript">
+
+        function arrMax(arr) {
+            let ma = arr[0];
+
+            for (let i = 1; i < arr.length; i++) {
+                if (arr[i] > ma)
+                    ma = arr[i];
+            }
+            return ma;
+        }
+
+        function findNumber(arr, num) {
+            for (let i = 0; i < arr.length; i++) {
+                if (parseInt(arr[i]) === num)
+                    return true;
+            }
+            return false;
+        }
+
+        function arrMin(arr) {
+            let mi = arr[0];
+
+            for (let i = 1; i < arr.length; i++) {
+                if (arr[i] < mi)
+                    mi = arr[i];
+            }
+            return mi;
+        }
+
+        function whoIsLost(arr) {
+            let arr2 = [];
+
+            for (let i = 0; i < arrMax(arr); i++) {
+                if (!findNumber(arr, i))
+                    arr2.push(i);
+            }
+            console.log("Minimal lost int: " + arrMin(arr2));
+        }
+
+        function readFiles(e) {
+            if (window.FileList && window.File) {
+
+                const file = e.files[0];
+
+                const name = file.name ? file.name : 'NOT SUPPORTED';
+                const type = file.type ? file.type : 'NOT SUPPORTED';
+                const size = file.size ? file.size : 'NOT SUPPORTED';
+                const reader = new FileReader();
+
+                reader.addEventListener('load', event => {
+                    let content = event.target.result;
+
+                    let rows = content.split(' ');
+
+                    console.log(rows);
+                    whoIsLost(rows);
+                });
+
+                reader.readAsText(file);
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <script>
+    </script>
+</body>
+
+</html>

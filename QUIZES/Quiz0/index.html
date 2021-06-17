@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Quiz0</title>
+    <input type="file" onChange="readFiles(this)" />
+    <script type="text/javascript">
+        var X, Y;
+        function GetXY(Strs, N) {
+            for (let i = 0; i < N; i++) {
+                let Freq = 0;
+                for (let j = 0; j < N; j++) {
+                    if (Strs[i] == Strs[j]) {
+                        Freq++;
+                    }
+                }
+                if (Freq == 1) {
+                    X = Strs[i];
+                    break;
+                }
+            }
+
+            for (let i = 0; i < N; i++) {
+                let Freq2 = 0;
+                for (let j = 0; j < N; j++) {
+                    if (Strs[i] == Strs[j]) {
+                        Freq2++;
+                    }
+                }
+                if (Freq2 == 1) {
+                    if (Strs[i] != X) {
+                        Y = Strs[i];
+                        break;
+                    }
+                }
+            }
+            console.log("X: " + X + " Y: " + Y);
+            alert("X: " + X + " Y: " + Y);
+        }
+
+        function Test() {
+            let str = ["1010", "1111", "1010", "0001", "1010"];
+            GetXY(str, 5);
+        }
+
+        function EvalXY(strs) {
+            let num = strs[0];
+            let str = [];
+            let j = 0;
+
+            for (let i = 1; i < num; i++) {
+                str[j++] = strs[i];
+            }
+            GetXY(str, num);
+        }
+
+        function readFiles(e) {
+            if (window.FileList && window.File) {
+
+                const file = e.files[0];
+
+                const name = file.name ? file.name : 'NOT SUPPORTED';
+                const type = file.type ? file.type : 'NOT SUPPORTED';
+                const size = file.size ? file.size : 'NOT SUPPORTED';
+                const reader = new FileReader();
+
+                reader.addEventListener('load', event => {
+                    let content = event.target.result;
+
+                    let rows = content.split('\r\n');
+
+                    console.log(rows);
+                    EvalXY(rows);
+                });
+
+                reader.readAsText(file);
+            }
+        }
+    </script>
+</head>
+
+<body>
+</body>
+
+</html>
