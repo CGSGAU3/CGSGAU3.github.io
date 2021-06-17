@@ -1,94 +1,42 @@
 <!DOCTYPE html>
+<html>
 
 <head>
-    <meta charset="UTF_8" />
-    <title>Chat (AU3)</title>
-    <link rel="stylesheet" href="./styles.css">
-    <div class="inputmsg">
-        Type Message:
-        <input id="msg" onkeydown="changeMessage(event)">
-        <button id="send" onmousedown="sendMessage()">Send Message</button>
-        <button id="scroll" onmousedown="setScroll()">Disable Scroll</button>
-    </div>
-    <br><br><br>
-    <script type="text/javascript">
-        var usn = prompt("Input your name: ");
-        var msg;
-        var Messages = [];
-        var NumOfMessages = 0;
-        var isScroll = true;
-
-        function changeMessage(e) {
-            msg = document.getElementById("msg").value;
-            if (e.code == 'Enter')
-                sendMessage();
-        }
-
-        function setScroll() {
-            if (isScroll) {
-                isScroll = false;
-                document.getElementById("scroll").innerHTML = "Enable Scroll";
-                return;
-            }
-            else {
-                isScroll = true;
-                document.getElementById("scroll").innerHTML = "Disable Scroll";
-                setTimeout(scrollPage, 10);
-                return;
-            }
-        }
-
-        function sendMessage() {
-            if (msg != "") {
-                fetch("/newMessage", { method: 'POST', body: usn + ": " + msg });
-                document.getElementById("msg").value = "";
-            }
-        }
-
-        function getAllMessages() {
-            fetch("/getMessage", { method: 'GET' });
-        }
-
-        function generateChat() {
-            document.getElementById("chat").innerHTML = "";
-            for (let i = 0; i < Messages.length; i++) {
-                var tag = document.createElement("p");
-                var text = document.createTextNode(Messages[i]);
-                tag.appendChild(text);
-                var element = document.getElementById("chat");
-                element.appendChild(tag);
-            }
-        }
-
-        async function getMessage() {
-            try {
-                const responce = await window.fetch("/getMessage", { method: 'GET' });
-                if (!responce.ok)
-                    throw new Error(`Response status is: ${response.status}`);
-                Messages = JSON.parse(await responce.text());
-                generateChat();
-            } catch (err) {
-                console.log(err.message);
-            }
-            setTimeout(getMessage, 500);
-        }
-
-        function scrollPage() {
-            window.scrollBy(0, 1000);
-            if (isScroll)
-                setTimeout(scrollPage, 10);
-        }
-
-        function initChat() {
-            setTimeout(getMessage, 500);
-            setTimeout(scrollPage, 10);
-        }
-    </script>
+    <meta charset="UTF_8">
+    <title>Socket AU3 chat</title>
+    <link rel="stylesheet" href="/styles.css">
 </head>
 
-<body onload="initChat()">
-    <div id="chat">
-    </div>
+<body>
+    <ul id="messages"></ul>
+    <form id="form" action="">
+        <input id="input" autocomplete="off" /><button>Send</button>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+        var usn = prompt("Input your username: ");
+        var socket = io();
+
+        var messages = document.getElementById('messages');
+        var form = document.getElementById('form');
+        var input = document.getElementById('input');
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (input.value) {
+                socket.emit('chat message', usn + ": " + input.value);
+                input.value = '';
+            }
+        });
+
+        socket.on('chat message', function (msg) {
+            var item = document.createElement('li');
+            item.textContent = msg;
+            messages.appendChild(item);
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+    </script>
 </body>
 
 </html>
