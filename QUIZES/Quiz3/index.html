@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Quiz3</title>
+    <script type="text/javascript">
+        let isNum = [false, false, false, false, false, false, false, false, false, false];
+        let str = prompt('Input number N: ');
+        let Num = parseInt(str);
+        let plusNum = Num;
+
+        function isFinal() {
+            return isNum[0] && isNum[2] && isNum[3] && isNum[4] && isNum[5] && isNum[6] && isNum[7] && isNum[8] && isNum[9] && isNum[1];
+        }
+
+        function div(val, by) {
+            return (val - val % by) / by;
+        }
+
+        function setNumbers(num) {
+            while (num !== 0) {
+                isNum[num % 10] = true;
+                num = div(num, 10);
+            }
+        }
+
+        function getNumbers() {
+            while (!isFinal()) {
+                setNumbers(Num);
+                Num += plusNum;
+            }
+            Num -= plusNum;
+            console.log("Final number: " + Num);
+        }
+    </script>
+</head>
+
+<body onload="getNumbers()">
+    <script>
+    </script>
+</body>
+
+</html>
