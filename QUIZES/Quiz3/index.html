@@ -26,6 +26,10 @@
         }
 
         function getNumbers() {
+            if (Num === 0) {
+                console.log('БЕССОННИЦА');
+                return;
+            }
             while (!isFinal()) {
                 setNumbers(Num);
                 Num += plusNum;
