@@ -3,18 +3,26 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const port = 8080;
 
+const RECONNECT = 2;
+const HACKATTEMPT = 0;
+const NEWUSER = 1;
+
 let names = [];
 let ips = [];
 
 function newName(name, ip) {
     for (let i = 0; i < names.length; i++) {
         if (names[i] === name) {
-            return false;
+            if (ips[i] === ip) {
+                io.emit('recon', names[i]);
+                return RECONNECT;
+            }
+            return HACKATTEMPT;
         }
     }
     names.push(name);
     ips.push(ip);
-    return true;
+    return NEWUSER;
 }
 
 function isUser(msg) {
@@ -71,10 +79,17 @@ io.on('connection', (socket) => {
         }
     });
     socket.on('username', usn => {
-        if (newName(usn, ip))
-            io.emit('username', usn), console.log("Connected user " + usn);
-        else
-            io.emit('username', 'Обманщик'), console.log("Attempt to hack user " + usn);
+        switch (newName(usn, ip)) {
+            case NEWUSER:
+                io.emit('username', usn), console.log("Connected user " + usn);
+                break;
+            case HACKATTEMPT:
+                io.emit('username', 'Обманщик'), console.log("Attempt to hack user " + usn);
+                break;
+            case RECONNECT:
+                io.emit('username', usn), console.log("Reconnected user " + usn);
+                break;
+        }
     });
 });
 

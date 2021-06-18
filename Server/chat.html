@@ -43,6 +43,11 @@
             if (!isCheck)
                 usn = usname, isCheck = true;
         });
+
+        socket.on('recon', function (usname) {
+            if (usname === usn)
+                alert('Welcome again, ' + usname);
+        });
     </script>
 </body>
 
